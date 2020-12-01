@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/AS2017521upeksha/network-moniter-application#readme",
   "dependencies": {
-    "mongoose": "^5.11.0"
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.0",
+    "systeminformation": "^4.30.9",
+    "tsc": "^1.20150623.0"
   }
 }
