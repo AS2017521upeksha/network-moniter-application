@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var mongodb_1 = require("mongodb");
-var si = require("systeminformation");
 var uri = 'mongodb+srv://upeksha:qxUcHnRAvzV4jZIl@pcnetworkmonitor.bdsx2.mongodb.net/<monitor_data>?retryWrites=true&w=majority';
 var client = new mongodb_1.MongoClient(uri);
 function main() {
@@ -66,56 +65,45 @@ main()["catch"](console.error);
 function iteartion() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
+            getAll(function (all_working_pcs, all_connected_pcs, all_disconnected_pcs) {
+                console.log(all_working_pcs);
+                console.log(all_connected_pcs);
+                console.log(all_disconnected_pcs);
+                setInterval(iteartion, 30000);
+            });
+            return [2 /*return*/];
+        });
+    });
+}
+function getAll(callback) {
+    return __awaiter(this, void 0, void 0, function () {
+        var t, now_t, cursor, cursor_1, disconnected, results, results_1;
+        return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getIP(function (ip_address, iface) {
-                        getNetworkStat(iface, function (tx_packets, rx_packets) {
-                            var item = {
-                                ip_address: ip_address,
-                                network_interface: iface,
-                                tx_packets: tx_packets,
-                                rx_packets: rx_packets,
-                                status: 'CONNECTED',
-                                time: new Date(Date.now())
-                            };
-                            updateListingByIp(item);
-                            setInterval(iteartion, 5000);
-                        });
-                    })];
+                case 0:
+                    t = new Date();
+                    t.setSeconds(t.getSeconds() - 30);
+                    now_t = new Date(Date.now());
+                    cursor = client.db("monitor_data").collection("dataSchema").find({ status: 'CONNECTED' }).sort({ time: -1 });
+                    cursor_1 = client.db("monitor_data").collection("dataSchema").find({ status: 'CONNECTED',
+                        time: { $gte: t, $lte: now_t } }).sort({ time: -1 });
+                    disconnected = [];
+                    return [4 /*yield*/, cursor.toArray()];
                 case 1:
-                    _a.sent();
+                    results = _a.sent();
+                    return [4 /*yield*/, cursor_1.toArray()];
+                case 2:
+                    results_1 = _a.sent();
+                    if (results.length !== results_1.length) {
+                        results.forEach(function (result_1) {
+                            if (!(results_1.some(function (result) { return result.ip_address === result_1.ip_address; }))) {
+                                disconnected.push(result_1);
+                            }
+                        });
+                    }
+                    callback(results, results_1, disconnected);
                     return [2 /*return*/];
             }
         });
     });
-}
-function getIP(callback) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            si.networkInterfaces()
-                .then(function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].iface === 'WiFi' || data[i].iface === 'Ethernet') {
-                        callback(data[i].ip4, data[i].iface);
-                    }
-                }
-            });
-            return [2 /*return*/];
-        });
-    });
-}
-function getNetworkStat(iface, callback) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            si.networkStats(iface)
-                .then(function (data) {
-                var tx_bytes = data[0].tx_sec;
-                var rx_bytes = data[0].rx_sec;
-                callback(tx_bytes, rx_bytes);
-            });
-            return [2 /*return*/];
-        });
-    });
-}
-function updateListingByIp(updatedItem) {
-    var result = client.db("monitor_data").collection("dataSchema").updateOne({ ip_address: updatedItem.ip_address }, { $set: updatedItem }, { upsert: true });
 }

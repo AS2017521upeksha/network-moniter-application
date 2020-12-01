@@ -28,8 +28,8 @@ async function main(){
                status : 'CONNECTED',
                time : new Date(Date.now())
            }
-           updateListingByIp(client , item);
-           setInterval(iteartion, 5000) ;
+           updateListingByIp(item);
+           setInterval(iteartion, 5000);
         });
 
       }); 
@@ -59,9 +59,9 @@ async function main(){
  }
 
 
-function updateListingByIp(client, updatedItem : Item) {
-    const result = client.db("monitor_data").collection("dataSchema")
-                        .updateOne({ ip_address: updatedItem.ip_address }, { $set: updatedItem },{ upsert: true });
+
+function updateListingByIp(updatedItem : Item) {
+    const result = client.db("monitor_data").collection("dataSchema").updateOne({ ip_address: updatedItem.ip_address }, { $set: updatedItem },{ upsert: true });
 
 }
  
