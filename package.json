@@ -1,0 +1,23 @@
+{
+  "name": "network-moniter-application",
+  "version": "1.0.0",
+  "description": "Network moniter Application with js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AS2017521upeksha/network-moniter-application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AS2017521upeksha/network-moniter-application/issues"
+  },
+  "homepage": "https://github.com/AS2017521upeksha/network-moniter-application#readme",
+  "dependencies": {
+    "mongoose": "^5.11.0"
+  }
+}

@@ -1,2 +1,2 @@
 # network-moniter-application
-Flask Api with angular bakend
+Network moniter Application with js
